@@ -19,6 +19,8 @@ public class GameUIManager : MonoBehaviour
     // Cache profile
     public VolumeProfile postProfile;
 
+    public CanvasGroup screenFader;
+
 
     public Radar radar;
 
@@ -32,12 +34,16 @@ public class GameUIManager : MonoBehaviour
         // Load the post processing profile
         //postProfile = postVolume.profile);
         SetFocus(25);
+
+        screenFader.alpha = 1;
+        FadeScreen(0, 2);
     }
 
     public void Update()
     {
-        leftTurnButton.SetActive(!radar.radarUp);
-        rightTurnButton.SetActive(!radar.radarUp);
+        leftTurnButton.SetActive(!radar.radarUp && !radar.menuActive);
+        rightTurnButton.SetActive(!radar.radarUp && !radar.menuActive);
+        toggleRadarButton.SetActive(!radar.menuActive);
 
         radarText.text = radar.radarUp ? "<" : ">";
     }
@@ -76,6 +82,25 @@ public class GameUIManager : MonoBehaviour
 
             postProfile.components[index] = de;
             yield return null; 
+        }
+    }
+
+    public void FadeScreen(float alpha, float time)
+    {
+        StartCoroutine(LerpFade(alpha, time));
+    }
+
+    public IEnumerator LerpFade(float target, float time)
+    {
+        float t = 0;
+        float start = screenFader.alpha;
+
+        while (t <= time)
+        {
+            t += Time.deltaTime;
+
+            screenFader.alpha = Mathf.Lerp(start, target, t / time);
+            yield return null;
         }
     }
 }

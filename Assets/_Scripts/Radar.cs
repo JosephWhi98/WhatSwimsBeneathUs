@@ -47,7 +47,7 @@ public class Radar : MonoBehaviour
 
     public void RadarUpdate()
     {
-        rotator.Rotate(new Vector3(0, 0, -1f), Space.Self);
+        rotator.Rotate(new Vector3(0, 0, -200f * Time.deltaTime), Space.Self);
 
         Vector3 trackingPosition = trackingTarget.position;
         trackingPosition.y = player.position.y + 5f;
