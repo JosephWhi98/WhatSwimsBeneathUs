@@ -31,6 +31,9 @@ public class Radar : MonoBehaviour
 
     public GameObject mainMenu;
     public GameObject helpMenu;
+    public GameObject pauseMenu; 
+
+    public bool paused; 
 
     public void Start()
     {
@@ -51,6 +54,10 @@ public class Radar : MonoBehaviour
 
     public void Update()
     {
+        if (Input.GetKey(KeyCode.Escape) && !menuActive)
+            PauseMenu();
+
+
         radarBase.SetActive(!menuActive && charge > 0);
         radarDead.SetActive(!menuActive && charge <= 0);
 
@@ -128,13 +135,32 @@ public class Radar : MonoBehaviour
     {
         mainMenu.SetActive(false);
         helpMenu.SetActive(true);
+        pauseMenu.SetActive(false);
     }
 
     public void BackToMain()
     {
         mainMenu.SetActive(true);
         helpMenu.SetActive(false);
+        pauseMenu.SetActive(false);
     }
+
+    public void PauseMenu()
+    {
+        menuActive = true; 
+        mainMenu.SetActive(false);
+        helpMenu.SetActive(false);
+        pauseMenu.SetActive(true);
+
+        if(!radarUp)
+            ToggleRadar();
+    }
+
+    public void Restart()
+    {
+        GameUIManager.instance.ReloadScene();
+    }
+
 
     public void Exit()
     {

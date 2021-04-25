@@ -59,7 +59,7 @@ public class SharkCage : MonoBehaviour
         heat = heat < 0 ? 0 : heat; //clamp heat at 0
 
         
-        Debug.Log(heat);
+        //Debug.Log(heat);
 
     }
 

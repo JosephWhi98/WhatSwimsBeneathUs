@@ -216,4 +216,16 @@ public class GameUIManager : MonoBehaviour
 
         SceneManager.LoadScene(0);
     }
+
+    public void ReloadScene()
+    {
+        StartCoroutine(Reload());
+    }
+
+    public IEnumerator Reload()
+    {
+        FadeScreen(screenFader, 1, 1);
+        yield return new WaitForSeconds(1.5f);
+        SceneManager.LoadScene(0);
+    }
 }

@@ -51,31 +51,31 @@ public class Meg : Fish
         UpdateBones();
 
 
-        float dangerDist = 5f;
+        float dangerDist = 8f;
         float maxHeat = 35f;
 
         if (Mathf.Abs(cagePosition.position.y) > 100)
         {
-            dangerDist = 6f;
+            dangerDist = 9f;
             maxHeat = 30f;
         }
         else if (Mathf.Abs(cagePosition.position.y) > 150)
         {
-            dangerDist = 7f;
+            dangerDist = 10f;
             maxHeat = 25f;
         }
         else if (Mathf.Abs(cagePosition.position.y) > 200)
         {
-            dangerDist = 8f;
+            dangerDist = 11f;
             maxHeat = 20f;
         }
         else if (Mathf.Abs(cagePosition.position.y) > 250)
         {
-            dangerDist = 9f;
+            dangerDist = 12f;
             maxHeat = 15f;
         }
 
-
+        Debug.Log(Vector3.Distance(transform.position, cagePosition.position));
 
 
         if (Vector3.Distance(transform.position, cagePosition.position) < dangerDist && cage.descending || cage.heat > maxHeat)
