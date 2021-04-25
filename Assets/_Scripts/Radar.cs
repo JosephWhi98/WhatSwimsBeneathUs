@@ -152,6 +152,10 @@ public class Radar : MonoBehaviour
         helpMenu.SetActive(false);
         pauseMenu.SetActive(true);
 
+
+        if (GameUIManager.instance.cage.descending)
+            GameUIManager.instance.cage.ToggleDescending();
+
         if(!radarUp)
             ToggleRadar();
     }

@@ -75,10 +75,10 @@ public class Meg : Fish
             maxHeat = 15f;
         }
 
-        Debug.Log(Vector3.Distance(transform.position, cagePosition.position));
+        //Debug.Log(Vector3.Distance(transform.position, cagePosition.position));
+        float dist = Vector3.Distance(transform.position, cagePosition.position); 
 
-
-        if (Vector3.Distance(transform.position, cagePosition.position) < dangerDist && cage.descending || cage.heat > maxHeat)
+        if (dist < dangerDist && cage.descending || (dist < 50 && cage.heat > maxHeat))
         {
             if (GameUIManager.instance.caught == false)
                 GameUIManager.instance.Caught();
