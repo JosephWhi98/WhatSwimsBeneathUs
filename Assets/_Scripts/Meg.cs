@@ -35,14 +35,54 @@ public class Meg : Fish
             UpdateTarget();
         }
 
-        transform.position = Vector3.MoveTowards(transform.position, transform.position + transform.forward, speed * Time.deltaTime);
-
         Vector3 targetDirection = (newTarget - transform.position).normalized;
+
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.forward, out hit, 7, avoidanceMask))
+        {
+            targetDirection += hit.normal * 20;
+        }
 
         targetRotation = Quaternion.LookRotation(targetDirection);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
 
+        transform.position = Vector3.MoveTowards(transform.position, transform.position + transform.forward, speed * Time.deltaTime);
+
         UpdateBones();
+
+
+        float dangerDist = 5f;
+        float maxHeat = 35f;
+
+        if (Mathf.Abs(cagePosition.position.y) > 100)
+        {
+            dangerDist = 6f;
+            maxHeat = 30f;
+        }
+        else if (Mathf.Abs(cagePosition.position.y) > 150)
+        {
+            dangerDist = 7f;
+            maxHeat = 25f;
+        }
+        else if (Mathf.Abs(cagePosition.position.y) > 200)
+        {
+            dangerDist = 8f;
+            maxHeat = 20f;
+        }
+        else if (Mathf.Abs(cagePosition.position.y) > 250)
+        {
+            dangerDist = 9f;
+            maxHeat = 15f;
+        }
+
+
+
+
+        if (Vector3.Distance(transform.position, cagePosition.position) < dangerDist && cage.descending || cage.heat > maxHeat)
+        {
+            if (GameUIManager.instance.caught == false)
+                GameUIManager.instance.Caught();
+        }
     }
 
     public override void UpdateTarget()

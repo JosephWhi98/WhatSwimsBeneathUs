@@ -10,6 +10,8 @@ public class OxygenTank : MonoBehaviour
     public Transform dial;
 
 
+    public AudioSource source;
+
     public void Start()
     {
         oxygenMax = oxygen;
@@ -23,7 +25,28 @@ public class OxygenTank : MonoBehaviour
         rot.z = Mathf.Lerp(180, 15, 1 - oxygen/oxygenMax);
         dial.transform.localEulerAngles = rot;
 
+        if (oxygen / oxygenMax < 0.1f)
+        {
+            if (!source.isPlaying)
+            {
+                source.volume = 0;
+                source.Play();
+            }
+            else
+            {
+                source.volume = Mathf.Lerp(source.volume, 0.413f, Time.deltaTime * 5f);
+            }
+        }
 
-        oxygen -= Time.deltaTime;
+        if (!GameUIManager.instance.radar.menuActive && !GameUIManager.instance.caught)
+        {
+            oxygen -= Time.deltaTime;
+
+            if (oxygen <= 0)
+            {
+                oxygen = 0;
+                GameUIManager.instance.OxygenDeath();
+            }
+        }
     }
 }

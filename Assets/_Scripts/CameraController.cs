@@ -5,15 +5,16 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     public float rotationSpeed; 
-    Quaternion targetRotation;
-
+    public Quaternion targetRotation;
+    public Quaternion startRotation;
     public AudioSource audioSource;
     public Transform megladon;
 
 
     public void Start() 
     {
-        targetRotation = transform.localRotation; 
+        startRotation = transform.localRotation; 
+        targetRotation = startRotation; 
     }
 
     public void Update()

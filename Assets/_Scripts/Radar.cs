@@ -22,25 +22,56 @@ public class Radar : MonoBehaviour
 
     public GameObject radarBase;
     public GameObject menuBase;
+    public GameObject radarDead;
+
+    public GameObject[] batteryBars;
+
+    public float charge;
+    private float startCharge;
+
+    public GameObject mainMenu;
+    public GameObject helpMenu;
 
     public void Start()
     {
         menuActive = true;
         radarUp = false;
-        ToggleRadar();
+        startCharge = charge;
 
+        StartCoroutine(DelayedRaise());
+    }
+
+    IEnumerator DelayedRaise()
+    {
+        yield return new WaitForSeconds(1.5f);
+        ToggleRadar();
     }
 
 
 
     public void Update()
     {
-        radarBase.SetActive(!menuActive);
+        radarBase.SetActive(!menuActive && charge > 0);
+        radarDead.SetActive(!menuActive && charge <= 0);
+
         menuBase.SetActive(menuActive);
 
         if (!menuActive)
         { 
-            RadarUpdate();
+            if(charge > 0)
+                RadarUpdate();
+
+            if (radarUp)
+            {
+                float batPerc = charge / startCharge;
+
+                batteryBars[0].SetActive(batPerc > 0.75f);
+                batteryBars[1].SetActive(batPerc > 0.50f);
+                batteryBars[2].SetActive(batPerc > 0.25f);
+                batteryBars[3].SetActive(batPerc > 0f);
+
+                charge = charge <= 0 ? 0 : charge - Time.deltaTime;
+            }
         }
 
     }
@@ -91,6 +122,25 @@ public class Radar : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         menuActive = false;
+    }
+
+    public void HowTo()
+    {
+        mainMenu.SetActive(false);
+        helpMenu.SetActive(true);
+    }
+
+    public void BackToMain()
+    {
+        mainMenu.SetActive(true);
+        helpMenu.SetActive(false);
+    }
+
+    public void Exit()
+    {
+#if !UNITY_EDITOR
+    Application.Quit();
+#endif
     }
 }
 

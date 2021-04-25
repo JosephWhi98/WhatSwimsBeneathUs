@@ -23,6 +23,10 @@ public class MenuButtons : MonoBehaviour
         startScale = transform.localScale;
     }
 
+    public void OnDisable()
+    {
+        MouseExit();
+    }
 
     public void OnClick()
     {

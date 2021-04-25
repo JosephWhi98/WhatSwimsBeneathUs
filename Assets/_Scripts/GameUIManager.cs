@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.SceneManagement; 
 
 public class GameUIManager : MonoBehaviour
 {
@@ -24,6 +25,19 @@ public class GameUIManager : MonoBehaviour
 
     public Radar radar;
 
+    public bool caught;
+
+    public GameObject realMeg;
+    public GameObject fakeMeg;
+    public CameraController camController;
+    public SharkCage cage;
+
+    public TMP_Text finalText;
+    public CanvasGroup finalTextGroup;
+
+    public AudioSource source;
+    public AudioClip drownClip; 
+
     public void Awake()
     {
         instance = this;
@@ -36,16 +50,31 @@ public class GameUIManager : MonoBehaviour
         SetFocus(25);
 
         screenFader.alpha = 1;
-        FadeScreen(0, 2);
+        StartCoroutine(DelayedFade());
+    }
+
+    public IEnumerator DelayedFade()
+    {
+        yield return new WaitForSeconds(1f);
+        FadeScreen(screenFader, 0, 2);
     }
 
     public void Update()
     {
-        leftTurnButton.SetActive(!radar.radarUp && !radar.menuActive);
-        rightTurnButton.SetActive(!radar.radarUp && !radar.menuActive);
-        toggleRadarButton.SetActive(!radar.menuActive);
+        if (!caught)
+        {
+            leftTurnButton.SetActive(!radar.radarUp && !radar.menuActive);
+            rightTurnButton.SetActive(!radar.radarUp && !radar.menuActive);
+            toggleRadarButton.SetActive(!radar.menuActive);
 
-        radarText.text = radar.radarUp ? "<" : ">";
+            radarText.text = radar.radarUp ? "<" : ">";
+        }
+        else
+        {
+            leftTurnButton.SetActive(false);
+            rightTurnButton.SetActive(false);
+            toggleRadarButton.SetActive(false);
+        }
     }
 
     public void SetFocus(float newFocus)
@@ -85,22 +114,106 @@ public class GameUIManager : MonoBehaviour
         }
     }
 
-    public void FadeScreen(float alpha, float time)
+    public void FadeScreen(CanvasGroup group, float alpha, float time)
     {
-        StartCoroutine(LerpFade(alpha, time));
+        StartCoroutine(LerpFade(group, alpha, time));
     }
 
-    public IEnumerator LerpFade(float target, float time)
+    public IEnumerator LerpFade(CanvasGroup group, float target, float time)
     {
         float t = 0;
-        float start = screenFader.alpha;
+        float start = group.alpha;
 
         while (t <= time)
         {
             t += Time.deltaTime;
 
-            screenFader.alpha = Mathf.Lerp(start, target, t / time);
+            group.alpha = Mathf.Lerp(start, target, t / time);
             yield return null;
         }
+    }
+
+    public void Caught()
+    {
+        if (radar.radarUp)
+        {
+            radar.ToggleRadar();
+        }
+
+        if (cage.descending)
+        {
+            cage.ToggleDescending();
+        }
+
+
+        caught = true; 
+        StartCoroutine(CaughtRoutine());
+    }
+
+    public IEnumerator CaughtRoutine()
+    {
+        FadeScreen(screenFader, 1, 1);
+        yield return new WaitForSeconds(1.5f);
+        realMeg.SetActive(false);
+        camController.targetRotation = camController.startRotation; 
+        FadeScreen(screenFader, 0, 3);
+        yield return new WaitForSeconds(0.5f);
+        fakeMeg.SetActive(true);
+        yield return new WaitForSeconds(3.5f);
+        FadeScreen(screenFader, 1, 1);
+        yield return new WaitForSeconds(1f);
+        finalText.text = "Depth: " + cage.depthDisplay.text;
+        FadeScreen(finalTextGroup, 1, 1);
+
+        yield return new WaitForSeconds(3f);
+        FadeScreen(finalTextGroup, 0, 1);
+        yield return new WaitForSeconds(1f);
+
+        SceneManager.LoadScene(0);
+    }
+
+
+    public void OxygenDeath()
+    {
+        if (radar.radarUp)
+        {
+            radar.ToggleRadar();
+        }
+
+        if (cage.descending)
+        {
+            cage.ToggleDescending();
+        }
+
+        caught = true;
+        StartCoroutine(OxygenDeathRoutine());
+    }
+
+    public IEnumerator OxygenDeathRoutine()
+    {
+        //Oxygen death sfx
+        source.PlayOneShot(drownClip);
+
+        for (int i = 0; i < 2; i++)
+        {
+            FadeScreen(screenFader, 1, 0.5f);
+            yield return new WaitForSeconds(1f);
+            FadeScreen(screenFader, 0, 0.5f);
+            yield return new WaitForSeconds(1f);
+        }
+
+
+        FadeScreen(screenFader, 1, 1);
+        realMeg.SetActive(false);
+
+        yield return new WaitForSeconds(1f);
+        finalText.text = "Depth: " + cage.depthDisplay.text;
+        FadeScreen(finalTextGroup, 1, 1);
+
+        yield return new WaitForSeconds(3f);
+        FadeScreen(finalTextGroup, 0, 1);
+        yield return new WaitForSeconds(1f);
+
+        SceneManager.LoadScene(0);
     }
 }

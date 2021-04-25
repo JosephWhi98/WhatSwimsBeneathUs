@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Value: 1
   height:
     m_OverrideState: 1
-    m_Value: 400
+    m_Value: 450
 --- !u!114 &-32824795973885762
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -224,7 +224,7 @@ MonoBehaviour:
     m_Value: 0
   focusDistance:
     m_OverrideState: 1
-    m_Value: 25
+    m_Value: 0.22
     min: 0
   aperture:
     m_OverrideState: 0

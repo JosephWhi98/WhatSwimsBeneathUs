@@ -24,6 +24,8 @@ public class Fish : MonoBehaviour
 
     Collider cageCollider;
 
+    public LayerMask avoidanceMask; 
+
     private void Start()
     {
         randomOffset = Random.Range(0, 1000);
@@ -38,21 +40,24 @@ public class Fish : MonoBehaviour
             isMoving = true;
         }
 
-        transform.position = Vector3.MoveTowards(transform.position, transform.position + transform.forward, speed * Time.deltaTime);
-
         if (Vector3.Distance(transform.position, newTarget) < 3f)
         {
             isMoving = false;
         }
 
-        Vector3 cageDirection = (cageCollider.ClosestPoint(transform.position) - transform.position).normalized;
         Vector3 targetDirection = (newTarget - transform.position).normalized;
 
-        if (Vector3.Angle(cageDirection, targetDirection) < 45f)
-            UpdateTarget();
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.forward, out hit, 7, avoidanceMask))
+        {
+            targetDirection += hit.normal * 20;
+        }
 
         targetRotation = Quaternion.LookRotation(targetDirection);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+
+        transform.position = Vector3.MoveTowards(transform.position, transform.position + transform.forward, speed * Time.deltaTime);
+
 
         UpdateBones();
     }

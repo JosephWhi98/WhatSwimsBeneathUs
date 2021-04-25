@@ -66,8 +66,11 @@ public class SharkCage : MonoBehaviour
 
     public void ToggleDescending()
     {
-        descending = !descending;
-        meg.UpdateTarget();
+        if (GameUIManager.instance.caught == false)
+        {
+            descending = !descending;
+            meg.UpdateTarget();
+        }
     }
 
 }
