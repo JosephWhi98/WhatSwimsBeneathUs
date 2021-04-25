@@ -20,6 +20,26 @@ MonoBehaviour:
   height:
     m_OverrideState: 1
     m_Value: 450
+--- !u!114 &-2527485879853133533
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e617b4166a77dd499cf4b4b1c783ab3, type: 3}
+  m_Name: LowRes
+  m_EditorClassIdentifier: 
+  active: 1
+  m_AdvancedMode: 0
+  on:
+    m_OverrideState: 1
+    m_Value: 1
+  height:
+    m_OverrideState: 1
+    m_Value: 450
 --- !u!114 &-32824795973885762
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -63,7 +83,6 @@ MonoBehaviour:
   m_Name: Main Camera Profile
   m_EditorClassIdentifier: 
   components:
-  - {fileID: -6424901922356893368}
   - {fileID: 684279314328040403}
   - {fileID: 9026260132344976134}
   - {fileID: 6937989152324487403}
@@ -71,6 +90,7 @@ MonoBehaviour:
   - {fileID: 8630323946938886276}
   - {fileID: 8570630763530119925}
   - {fileID: 6399159672447341940}
+  - {fileID: -2527485879853133533}
 --- !u!114 &684279314328040403
 MonoBehaviour:
   m_ObjectHideFlags: 3
