@@ -45,7 +45,7 @@ public class Fish : MonoBehaviour
             isMoving = false;
         }
 
-        Vector3 cageDirection = (cageCollider.ClosestPoint(transform.position + (transform.forward * 2f)) - transform.position.normalized);
+        Vector3 cageDirection = (cageCollider.ClosestPoint(transform.position) - transform.position).normalized;
         Vector3 targetDirection = (newTarget - transform.position).normalized;
 
         if (Vector3.Angle(cageDirection, targetDirection) < 45f)

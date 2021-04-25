@@ -18,13 +18,40 @@ public class Radar : MonoBehaviour
     public bool radarUp;
     public Animator animator;
 
+    public bool menuActive;
+
+    public GameObject radarBase;
+    public GameObject menuBase;
+
+    public void Start()
+    {
+        menuActive = true;
+        radarUp = false;
+        ToggleRadar();
+
+    }
+
+
+
     public void Update()
+    {
+        radarBase.SetActive(!menuActive);
+        menuBase.SetActive(menuActive);
+
+        if (!menuActive)
+        { 
+            RadarUpdate();
+        }
+
+    }
+
+    public void RadarUpdate()
     {
         rotator.Rotate(new Vector3(0, 0, -1f), Space.Self);
 
         Vector3 trackingPosition = trackingTarget.position;
-        trackingPosition.y = player.position.y + 5f; 
-            
+        trackingPosition.y = player.position.y + 5f;
+
         if (Vector3.Distance(trackingTarget.position, player.position) < maxDist)
         {
             radarIcon.SetActive(true);
@@ -53,4 +80,17 @@ public class Radar : MonoBehaviour
         float focus = radarUp ? 0.22f : 25f;
         GameUIManager.instance.SetFocus(focus);
     }
+
+    public void ToggleMenu()
+    {
+        ToggleRadar();
+        StartCoroutine(DelayedMenuDisable());
+    }
+
+    public IEnumerator DelayedMenuDisable()
+    {
+        yield return new WaitForSeconds(1f);
+        menuActive = false;
+    }
 }
+

@@ -16,6 +16,13 @@ public class MenuButtons : MonoBehaviour
     public AudioClip hoverClip;
     public AudioClip clickClip;
 
+    public Vector3 startScale;
+
+    public void Start()
+    {
+        startScale = transform.localScale;
+    }
+
 
     public void OnClick()
     {
@@ -28,7 +35,7 @@ public class MenuButtons : MonoBehaviour
     public void MouseEnter()
     {
         hovering = true;
-        transform.localScale = Vector3.one * 0.11f;
+        transform.localScale = startScale * 1.1f;
         audioSource.clip = hoverClip;
         audioSource.Play();
     }
@@ -37,6 +44,6 @@ public class MenuButtons : MonoBehaviour
     public void MouseExit()
     {
         hovering = false;
-        transform.localScale = Vector3.one * 0.1f;
+        transform.localScale = startScale;
     }
 }
